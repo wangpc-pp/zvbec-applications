@@ -20,7 +20,7 @@ fi
 
 run_scalar() {
   echo "=== Scalar C reference ==="
-  "${QEMU_RISCV64}" -cpu "max,v=false,zvbce=false" \
+  "${QEMU_RISCV64}" -cpu "max,v=false,zvbec=false" \
     "${BUILD_DIR}/run-scalar"
 }
 
@@ -33,7 +33,7 @@ run_vector() {
   echo
   echo "=== VLEN=${vlen}: ${label} ==="
   "${QEMU_RISCV64}" \
-    -cpu "max,v=true,vlen=${vlen},zvbce=${extension}" \
+    -cpu "max,v=true,vlen=${vlen},zvbec=${extension}" \
     "${BUILD_DIR}/${executable}"
 }
 
@@ -46,7 +46,7 @@ expect_feature_gate_failure() {
   error_log=$(mktemp)
   shell_log=$(mktemp)
 
-  bash -c '"$1" -cpu "max,v=true,vlen=128,zvbce=false" "$2" \
+  bash -c '"$1" -cpu "max,v=true,vlen=128,zvbec=false" "$2" \
     >/dev/null 2>"$3"' \
     _ "${QEMU_RISCV64}" "${BUILD_DIR}/${executable}" "${error_log}" \
     2>"${shell_log}" || status=$?
@@ -70,20 +70,20 @@ run_scalar
 
 echo
 echo "=== P3104R0 portable C++ implementation ==="
-"${QEMU_RISCV64}" -cpu "max,v=false,zvbce=false" \
+"${QEMU_RISCV64}" -cpu "max,v=false,zvbec=false" \
   "${BUILD_DIR}/run-p3104"
 
 for vlen in ${VLENS}; do
-  run_vector "${vlen}" false run-rvv "RVV without Zvbce"
-  run_vector "${vlen}" true run-zvbce "RVV + Zvbce"
-  run_vector "${vlen}" true run-p3104-zvbce \
-    "P3104R0 C++ API + Zvbce"
+  run_vector "${vlen}" false run-rvv "RVV without Zvbec"
+  run_vector "${vlen}" true run-zvbec "RVV + Zvbec"
+  run_vector "${vlen}" true run-p3104-zvbec \
+    "P3104R0 C++ API + Zvbec"
 done
 
 echo
-echo "Checking that the Zvbce binary fails when Zvbce is disabled"
-expect_feature_gate_failure run-zvbce run-zvbce
+echo "Checking that the Zvbec binary fails when Zvbec is disabled"
+expect_feature_gate_failure run-zvbec run-zvbec
 
 echo
-echo "Checking that the P3104R0 Zvbce binary fails when Zvbce is disabled"
-expect_feature_gate_failure run-p3104-zvbce run-p3104-zvbce
+echo "Checking that the P3104R0 Zvbec binary fails when Zvbec is disabled"
+expect_feature_gate_failure run-p3104-zvbec run-p3104-zvbec

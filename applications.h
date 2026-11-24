@@ -1,5 +1,5 @@
-#ifndef ZVBCE_APPLICATIONS_H
-#define ZVBCE_APPLICATIONS_H
+#ifndef ZVBEC_APPLICATIONS_H
+#define ZVBEC_APPLICATIONS_H
 
 #include <stddef.h>
 #include <stdint.h>

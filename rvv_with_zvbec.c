@@ -5,13 +5,13 @@
 #include "applications.h"
 
 /*
- * Zvbce performs the same per-element bit reshapes directly.
+ * Zvbec performs the same per-element bit reshapes directly.
  *
  * Constant masks select the .vx forms, so a single GPR mask is shared by all
  * active elements. The surrounding load/store loop is unchanged.
  */
 
-const char *implementation_name(void) { return "RVV + Zvbce"; }
+const char *implementation_name(void) { return "RVV + Zvbec"; }
 
 void base64_decode_reshape(const uint32_t *input, uint32_t *output,
                            size_t count) {
